@@ -1,0 +1,263 @@
+#include<iostream>
+#include<conio.h>
+#include<iomanip>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* next;
+    Node* prev;
+
+    Node(int value) {
+        this->data = value;
+        this->next = nullptr;
+        this->prev = nullptr;
+    }
+};
+
+class DLL {
+public:
+    Node* head;
+    Node* tail;
+
+    DLL() {
+        head = nullptr;
+        tail = nullptr;
+    }
+
+    // Task 1: Destructor implementation
+    ~DLL() {
+        Node* current = head;
+        while (current != nullptr) {
+            Node* nextNode = current->next;
+            delete current;
+            current = nextNode;
+        }
+        head = nullptr;
+        tail = nullptr;
+        cout << "List destroyed successfully!" << endl;
+    }
+
+    void display() {
+        Node* current = head;
+
+        if (current == nullptr) {
+            cout << "List is Empty" << endl;
+            return;
+        }
+
+        while (current != nullptr) {
+            cout << current->data << " ";
+            current = current->next;
+        }
+        cout << endl;
+    }
+
+    void Display() {
+        Node* temp = head;
+        cout << "\n------------------------------------------------------\n";
+        cout << "     Prev Address        |   Data   |     Next Address |   Node Address\n";
+        cout << "------------------------------------------------------\n";
+
+        while (temp != nullptr) {
+            cout << setw(20) << temp->prev
+                << " | " << setw(7) << temp->data
+                << " | " << setw(18) << temp->next
+                << " | " << setw(20) << temp
+                << endl;
+            temp = temp->next;
+        }
+        cout << endl << "Head: " << head << endl;
+        cout << "Tail: " << tail << endl;
+        cout << "------------------------------------------------------\n";
+    }
+
+    void insertAtBegin(int value) {
+        Node* newNode = new Node(value);
+
+        if (head == nullptr) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            newNode->next = head;
+            head->prev = newNode;
+            head = newNode;
+        }
+    }
+
+    // Task 2: Fixed insertAtPos function
+    void insertAtPos(int position, int value) {
+        if (position < 1) {
+            cout << "Invalid position! Position should be >= 1." << endl;
+            return;
+        }
+
+        if (position == 1) {
+            insertAtBegin(value);
+            return;
+        }
+
+        Node* current = head;
+        int currentPos = 1;
+
+        // Traverse to the node before the desired position
+        while (current != nullptr && currentPos < position - 1) {
+            current = current->next;
+            currentPos++;
+        }
+
+        if (current == nullptr) {
+            cout << "Invalid position! Position exceeds list size." << endl;
+            return;
+        }
+
+        Node* newNode = new Node(value);
+
+        // If inserting at the end
+        if (current->next == nullptr) {
+            current->next = newNode;
+            newNode->prev = current;
+            tail = newNode;
+        } else {
+            // Inserting in the middle
+            newNode->next = current->next;
+            newNode->prev = current;
+            current->next->prev = newNode;
+            current->next = newNode;
+        }
+    }
+
+    // Task 3: Fixed deleteFB function
+    void deleteFB() {
+        if (head == nullptr) {
+            cout << "List is Empty" << endl;
+            return;
+        }
+
+        Node* temp = head;
+        
+        if (head->next == nullptr) {
+            // Only one node in the list
+            head = nullptr;
+            tail = nullptr;
+        } else {
+            head = head->next;
+            head->prev = nullptr; // Fixed: Set new head's prev to nullptr
+        }
+        
+        delete temp;
+        cout << "First node deleted successfully!" << endl;
+    }
+
+    // Task 4: Fixed DisplayNode function - shows only single node
+    void DisplayNode(Node* node) {
+        if (node == nullptr) {
+            cout << "Node is null!" << endl;
+            return;
+        }
+        
+        cout << "\n------------------------------------------------------\n";
+        cout << "     Prev Address        |   Data   |     Next Address |   Node Address\n";
+        cout << "------------------------------------------------------\n";
+        
+        cout << setw(20) << node->prev
+             << " | " << setw(7) << node->data
+             << " | " << setw(18) << node->next
+             << " | " << setw(20) << node
+             << endl;
+        
+        cout << "------------------------------------------------------\n";
+    }
+
+    void search(int value) {
+        Node* current = head;
+        bool found = false;
+
+        while (current != nullptr) {
+            if (current->data == value) {
+                cout << "Node found!" << endl;
+                DisplayNode(current);
+                found = true;
+            }
+            current = current->next;
+        }
+        
+        if (!found) {
+            cout << "Node with value " << value << " not found in the list." << endl;
+        }
+    }
+
+    void insertAtEnd(int value) {
+        if (tail == nullptr) {
+            insertAtBegin(value);
+        } else {
+            Node* newNode = new Node(value);
+            tail->next = newNode;
+            newNode->prev = tail;
+            tail = newNode;
+        }
+    }
+    
+    // Additional utility function to get list size
+    int getSize() {
+        int count = 0;
+        Node* current = head;
+        while (current != nullptr) {
+            count++;
+            current = current->next;
+        }
+        return count;
+    }
+};
+
+int main() {
+    DLL list;
+    
+    cout << "=== Testing Doubly Linked List Implementation ===" << endl;
+    
+    cout << "\n Adding four elements to the list " << endl;
+    list.insertAtBegin(10);
+    list.insertAtEnd(20);
+    list.insertAtEnd(30);
+    list.insertAtEnd(40);
+    
+    cout << "List after adding 4 elements: ";
+    list.display();
+    list.Display();
+    
+    cout << "\n--- Task 2: Adding 5th element at position 3 ---" << endl;
+    list.insertAtPos(3, 25);
+    cout << "List after inserting 25 at position 3: ";
+    list.display();
+    list.Display();
+  
+    cout << "\n--- Adding element at the end ---" << endl;
+    list.insertAtEnd(50);
+    cout << "List after adding 50 at end: ";
+    list.display();
+    
+    cout << "\n--- Task 3: Deleting from beginning ---" << endl;
+    list.deleteFB();
+    cout << "List after deleting first element: ";
+    list.display();
+    list.Display();
+    
+    cout << "\n--- Searching for nodes ---" << endl;
+    list.search(25);
+    list.search(100); // This should not be found
+    
+    cout << "\n--- Task 4: Displaying single node ---" << endl;
+    if (list.head != nullptr && list.head->next != nullptr) {
+        cout << "Displaying second node:" << endl;
+        list.DisplayNode(list.head->next);
+    }
+    
+    cout << "\n--- Final List State ---" << endl;
+    list.display();
+    cout << "List size: " << list.getSize() << endl;
+    
+    cout << "\n--- Program End - Destructor will be called ---" << endl;
+    
+    return 0;
+}
