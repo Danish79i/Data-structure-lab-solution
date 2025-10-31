@@ -1,0 +1,76 @@
+
+Dry Run Report: HospitalSystem (Doubly Linked List)
+---------------------------------------------------
+
+This program simulates an Emergency Room (ER) queue using a doubly linked list.
+
+Each patient (mariz) has a unique ID. The system supports:
+- Insertion at head (insertAThead)
+- Insertion at tail (insertATtail)
+- Insertion at any position (insertatPOS)
+- Deletion from the start (deleteFROMstart)
+- Displaying patients from start or end
+
+---------------------------------------------------
+Initial State:
+head = nullptr
+tail = nullptr
+
+---------------------------------------------------
+Step-by-Step Dry Run:
+
+1. insertATtail(101)
+   - List is empty → new node becomes both head and tail.
+   - head = 101, tail = 101
+   Current List: [101]
+
+2. insertATtail(102)
+   - Adds node after 101.
+   - tail->next = 102; 102->prev = 101
+   - tail = 102
+   Current List: [101 <-> 102]
+
+3. insertAThead(200)
+   - Adds node before 101.
+   - 200->next = 101; 101->prev = 200
+   - head = 200
+   Current List: [200 <-> 101 <-> 102]
+
+4. insertatPOS(150, 2)
+   - Traverse to position 1 (before inserting at 2).
+   - Insert 150 between 200 and 101.
+   - Update pointers:
+       200->next = 150
+       150->prev = 200
+       150->next = 101
+       101->prev = 150
+   Current List: [200 <-> 150 <-> 101 <-> 102]
+
+5. deleteFROMstart()
+   - Removes head node (200).
+   - New head = 150
+   - 150->prev = nullptr
+   - Deleted node 200 from memory.
+   Current List: [150 <-> 101 <-> 102]
+
+6. insertATtail(300)
+   - Adds new node 300 at the end.
+   - tail->next = 300; 300->prev = tail (102)
+   - tail = 300
+   Final List: [150 <-> 101 <-> 102 <-> 300]
+
+---------------------------------------------------
+Final Output when printed:
+
+Start se: 150 <-> 101 <-> 102 <-> 300 <-Tail
+End se:   300 <-> 102 <-> 101 <-> 150 <-Head
+
+---------------------------------------------------
+Edge Cases Handled:
+- Inserting into an empty list.
+- Deleting when list has one node.
+- Inserting at position 1.
+- Inserting beyond current length → handled by inserting at tail.
+
+---------------------------------------------------
+Dry Run Completed Successfully.
